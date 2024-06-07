@@ -92,7 +92,7 @@ export function getBlockPower(fighter, IsCriticalHitCombination) {
 
 function createActionElement(position, actionName, time) {
     const actionElement = createElement({ tagName: 'div', className: 'arena___fighter-action'});
-    actionElement.innerHTML = actionName
+    actionElement.innerHTML = actionName.includes('hit') ? 'Critical Hit' : actionName
 
     const arenaFighterElement = document.querySelector(`.arena___${position}-fighter`)
     arenaFighterElement.append(actionElement)
@@ -140,7 +140,7 @@ export function calculateAction(selectedFighters, actionName) {
 
     if (fighterParams.block) {
         statusActiveFighter.onBlock = true;
-        createActionElement(fighterParams.position, fighterParams.actionName, 50000);
+        createActionElement(fighterParams.position, fighterParams.actionName, 700);
 
         // one press - 0.7s of block
         setTimeout(() => {
@@ -157,6 +157,8 @@ export function calculateAction(selectedFighters, actionName) {
         setTimeout(() => {
             statusActiveFighter.criticalHitCombination = true;
         }, 10000);
+    } else {
+        fighterParams.actionName = 'Player Attack'
     }
 
     const attackFighter = selectedFighters[fighterParams.index];
@@ -165,8 +167,9 @@ export function calculateAction(selectedFighters, actionName) {
     const defender = getBlockPower(defenderFighter, fighterParams.criticalHit);
     const damage = getDamage(attacker, defender, statusInactiveFighter.onBlock);
         
-    createActionElement(fighterParams.position, fighterParams.actionName, 400);
-    decreaseHealth(damage, statusInactiveFighter, fighterParams.bar) && (Action.winner = attackFighter);
+    createActionElement(
+    fighterParams.position, fighterParams.actionName, 400);
+    decreaseHealth(damage, statusInactiveFighter, fighterParams.bar) && (Status.winner = attackFighter);
 
     console.log(actionName);
 }

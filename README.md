@@ -1,2 +1,0 @@
-# streetfight
-binary studio homework
